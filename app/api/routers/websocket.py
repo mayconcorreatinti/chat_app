@@ -9,4 +9,3 @@ async def websocket_endpoint(websocket:WebSocket):
         mensagem = await websocket.receive_text()
         await websocket.send_text(f'Mensagem recebida: {mensagem}')
 
-#www.aranacorp.com/pt/comunicacao-entre-servidor-e-cliente-websockets-com-python
