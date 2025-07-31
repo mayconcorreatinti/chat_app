@@ -1,7 +1,6 @@
-from fastapi import APIRouter,Depends
+from fastapi import APIRouter
+from fastapi.security import OAuth2PasswordRequestForm
 
-app =APIRouter(tags=['users'],prefix='/users')
 
-@app.get('/')
-def get_users():
-    ...
+app = APIRouter()
+

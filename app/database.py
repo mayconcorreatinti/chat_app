@@ -36,5 +36,6 @@ class Mysqldb:
         response = cursor.fetchall()
         return response
       
+      
 a=Mysqldb()
 print(a.queries('insert into users values (%s,%s,%s,%s)',('default','joao','mfdsaf@gmail.com','fgsdds')))

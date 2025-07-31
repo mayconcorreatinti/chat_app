@@ -1,11 +1,7 @@
 from fastapi import FastAPI
-from app.api.routers.users import app as users
+from app.api.routers.websocket import app as websock
 
 
 app = FastAPI()
 
-@app.get('/')
-def hello_world():
-    return {'message':'hello world'} 
-
-app.include_router(users)
+app.include_router(websock)
