@@ -22,7 +22,7 @@ class Mysqldb:
       database = self.__database, 
     )
 
-  def queries(self,query:str,data:tuple=None):
+  def run_queries(self,query:str,data:tuple=None):
     if not self.conn.is_connected():
       self.conn = self.__connection()
     
@@ -35,6 +35,13 @@ class Mysqldb:
         cursor.execute(query)
         response = cursor.fetchall()
         return response
+  
+  def insert_user_into_table():...
+
+  def delete_user_into_table():...
+
+
+
       
       
 a=Mysqldb()
