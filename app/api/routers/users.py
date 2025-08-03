@@ -1,12 +1,14 @@
 from fastapi import APIRouter,HTTPException
 from http import HTTPStatus
-from schemas.users_schemas import Credentials
+from schemas.users_schemas import Credentials,PublicCredentials
 from database import Mysqldb
+from services.user_security_services import password_hash
+
 
 app = APIRouter(tags=['users'],prefix='/users')
 db = Mysqldb()
 
-@app.post('/',status_code=HTTPStatus.CREATED)
+@app.post('/',status_code=HTTPStatus.CREATED,response_model=PublicCredentials)
 def create_account(account:Credentials):
     list_users = db.select_user_from_table((account.username,account.email))
     for user in list_users:
@@ -24,7 +26,7 @@ def create_account(account:Credentials):
         (
             account.username,
             account.email,
-            account.password,
+            password_hash(account.password),
         )
     )
     return account
