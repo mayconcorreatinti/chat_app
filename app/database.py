@@ -33,8 +33,8 @@ class Mysqldb:
         self.conn.commit()
       return response
   
-  def select_user_from_table(self,data:tuple) -> list[dict]:
-    return self._query("SELECT * FROM users WHERE name = (%s) or email = (%s) LIMIT 1;",data)
+  def select_user_from_table(self,data:tuple,column='email') -> list[dict]:
+    return self._query(f"SELECT * FROM users WHERE name = (%s) or {column} = (%s) LIMIT 1;",data)
   
   def select_users_from_table(self) -> list[tuple]:
     return self._query("SELECT * FROM users LIMIT 35;")

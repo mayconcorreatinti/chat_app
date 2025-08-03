@@ -4,3 +4,7 @@ class Credentials(BaseModel):
     username: str
     email: EmailStr
     password: str 
+
+class PublicCredentials(BaseModel):
+    username: str
+    email: EmailStr

@@ -1,9 +1,8 @@
-from passlib.context import CryptContext
+from pwdlib import PasswordHash
 from fastapi.security import OAuth2PasswordBearer
 
 
-pwd_context = CryptContext(schemes=['bcrypt'],deprecated = 'auto')
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+pwd_context = PasswordHash.recommended()
 
 def password_hash(password):
     return pwd_context.hash(password)
