@@ -22,24 +22,28 @@ class Mysqldb:
       database = self._database, 
     )
 
-  def _querie(self,query:str,data=None) -> bool | list[tuple]:
+  def _query(self,query:str,data=None) -> bool | list[tuple]:
     if not self.conn.is_connected():
-      self.conn = self.__connection()
+      self.conn = self._connection()
     
-    with self.conn.cursor() as cursor:
+    with self.conn.cursor(dictionary=True) as cursor:
       cursor.execute(query,data)
       response = cursor.fetchall()
       if data:
         self.conn.commit()
-        return True
       return response
-    
-  def select_users_into_table(self) -> list[tuple]:
-    return self._querie('SELECT * FROM users LIMIT 35;')
+  
+  def select_user_from_table(self,data:tuple) -> list[dict]:
+    return self._query("SELECT * FROM users WHERE name = (%s) or email = (%s) LIMIT 1;",data)
+  
+  def select_users_from_table(self) -> list[tuple]:
+    return self._query("SELECT * FROM users LIMIT 35;")
 
-  def insert_user_into_table(self,data:tuple) -> bool:
-    return self._querie('INSERT INTO users VALUES (%s,%s,%s,%s);',data)
+  def insert_user_from_table(self,data:tuple) -> bool:
+    return self._query("INSERT INTO users(name,email,password) VALUES (%s,%s,%s);",data)
     
-  def delete_user_into_table(self,data:tuple) -> bool:
-    return self._querie("DELETE FROM users WHERE id = (%s)",data)
+  def delete_user_from_table(self,data:tuple) -> bool:
+    return self._query("DELETE FROM users WHERE id = (%s);",data)
+
+
 
