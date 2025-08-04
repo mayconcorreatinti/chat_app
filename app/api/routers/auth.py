@@ -6,7 +6,7 @@ from services.user_security_services import verify_password
 from services.auth_services import get_token
 
 
-app = APIRouter(tags=['auth'],prefix='/auth')
+app = APIRouter(tags=['auth'],prefix='/token')
 db = Mysqldb()
 
 @app.post('/')
