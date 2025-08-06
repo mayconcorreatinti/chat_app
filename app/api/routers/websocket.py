@@ -1,7 +1,6 @@
 from fastapi import (
-    WebSocket,APIRouter,WebSocketDisconnect,Depends
+    WebSocket,APIRouter,WebSocketDisconnect,WebSocketException
 )
-from asyncio import sleep
 from services.auth_services import get_current_user
 from services.websocket_services import ConnectionManager
 
@@ -17,8 +16,8 @@ async def push_endpoint(websocket:WebSocket):
     await ws_manager.connect(websocket)
     token = await websocket.receive_text()
     user = get_current_user(token)
-    await ws_manager.broadcast(f'{user['name']} entrou na sala!!')
     try:
+        await ws_manager.broadcast(f"{user['name']} entrou na sala!!")
         while True:
             data = await websocket.receive_text()
             await ws_manager.broadcast(f"{user['name']}: {data}")

@@ -11,7 +11,6 @@ from database import Mysqldb
 
 load_dotenv()
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 db=Mysqldb()
 
 #encode token
@@ -26,7 +25,7 @@ def get_token(data:dict) -> str:
     return token
 
 #decode token
-def get_current_user(token:str = Depends(oauth2_scheme)):
+def get_current_user(token:str):
     credentials_exception = HTTPException(
         status_code=HTTPStatus.UNAUTHORIZED,
         detail='Could not validate credentials',
