@@ -6,5 +6,9 @@ class Credentials(BaseModel):
     password: str 
 
 class PublicCredentials(BaseModel):
+    id: int
     username: str
     email: EmailStr
+
+class Listusers(BaseModel):
+    users: list[PublicCredentials]

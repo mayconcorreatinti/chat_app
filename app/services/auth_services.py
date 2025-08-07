@@ -13,6 +13,8 @@ load_dotenv()
 
 db=Mysqldb()
 
+#oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
 #encode token
 def get_token(data:dict) -> str:
     exp=datetime.now(UTC) + timedelta(minutes=int(os.getenv('ACCESS_TOKEN_EXPIRE_MINUTES')))

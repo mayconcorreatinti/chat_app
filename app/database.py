@@ -22,7 +22,7 @@ class Mysqldb:
       database = self._database, 
     )
 
-  def _query(self,query:str,data=None) -> bool | list[tuple]:
+  def _query(self,query:str,data=None) -> bool | list[dict]:
     if not self.conn.is_connected():
       self.conn = self._connection()
     
@@ -36,7 +36,7 @@ class Mysqldb:
   def select_user_from_table(self,data:tuple,column='email') -> list[dict]:
     return self._query(f"SELECT * FROM users WHERE name = (%s) or {column} = (%s) LIMIT 1;",data)
   
-  def select_users_from_table(self) -> list[tuple]:
+  def select_users_from_table(self) -> list[dict]:
     return self._query("SELECT * FROM users LIMIT 35;")
 
   def insert_user_from_table(self,data:tuple) -> bool:

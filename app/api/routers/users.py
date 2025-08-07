@@ -1,6 +1,6 @@
 from fastapi import APIRouter,HTTPException
 from http import HTTPStatus
-from schemas.users_schemas import Credentials,PublicCredentials
+from schemas.users_schemas import Credentials,PublicCredentials,Listusers
 from database import Mysqldb
 from services.user_security_services import password_hash
 
@@ -30,4 +30,9 @@ def create_account(account:Credentials):
         )
     )
     return account
+
+@app.get('/',response_model=Listusers)
+def get_users():
+    list_users = db.select_users_from_table()
+    return {'users':list_users}
     
