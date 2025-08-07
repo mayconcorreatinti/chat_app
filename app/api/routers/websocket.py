@@ -9,8 +9,6 @@ app = APIRouter()
         
 ws_manager = ConnectionManager()
 
-app = APIRouter()
-
 @app.websocket('/ws')
 async def push_endpoint(token:str,websocket:WebSocket):
     await ws_manager.connect(websocket)

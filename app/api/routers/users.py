@@ -12,7 +12,7 @@ db = Mysqldb()
 def create_account(account:Credentials):
     list_users = db.select_user_from_table((account.username,account.email))
     for user in list_users:
-        if account.username in user['name']:
+        if account.username in user['username']:
             raise HTTPException(
                 detail="This name already exists!",
                 status_code=HTTPStatus.CONFLICT,
