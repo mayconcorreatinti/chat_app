@@ -1,6 +1,6 @@
 from datetime import datetime,UTC,timedelta
 import os
-from fastapi import Depends,HTTPException
+from fastapi import Depends,HTTPException,WebSocketException,status
 from dotenv import load_dotenv
 from fastapi.security import OAuth2PasswordBearer
 import jwt
@@ -15,7 +15,7 @@ db=Mysqldb()
 
 #oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
-#encode token
+'''encode token'''
 def get_token(data:dict) -> str:
     exp=datetime.now(UTC) + timedelta(minutes=int(os.getenv('ACCESS_TOKEN_EXPIRE_MINUTES')))
     payload = {'sub':data['username'],'exp':exp}
@@ -26,12 +26,10 @@ def get_token(data:dict) -> str:
         )
     return token
 
-#decode token
+'''decode token'''
 def get_current_user(token:str):
-    credentials_exception = HTTPException(
-        status_code=HTTPStatus.UNAUTHORIZED,
-        detail='Could not validate credentials',
-        headers={"WWW-Authenticate": "Bearer"}
+    credentials_exception=WebSocketException(
+        code=status.WS_1007_INVALID_FRAME_PAYLOAD_DATA
     )
     try:
         payload = jwt.decode(
