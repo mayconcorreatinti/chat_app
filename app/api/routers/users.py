@@ -1,8 +1,8 @@
 from fastapi import APIRouter,HTTPException
 from http import HTTPStatus
-from schemas.users_schemas import Credentials,PublicCredentials,Listusers
-from database import Mysqldb
-from services.user_security_services import password_hash
+from app.schemas.users_schemas import Credentials,PublicCredentials,Listusers
+from app.database import Mysqldb
+from app.services.user_security_services import password_hash
 
 
 app = APIRouter(tags=['users'],prefix='/users')
@@ -10,8 +10,8 @@ db = Mysqldb()
 
 @app.post('/',status_code=HTTPStatus.CREATED,response_model=PublicCredentials)
 def create_account(account:Credentials):
-    list_users = db.select_user_from_table((account.username,account.email))
-    for user in list_users:
+    user = db.select_user_from_table(account.username)
+    if user:
         if account.username in user['username']:
             raise HTTPException(
                 detail="This name already exists!",
@@ -29,7 +29,12 @@ def create_account(account:Credentials):
             password_hash(account.password),
         )
     )
-    return account
+    user = db.select_user_from_table(account.username)
+    return {
+        'id':user['id'],
+        'username':user['username'],
+        'email':user['email']
+    }
 
 @app.get('/',response_model=Listusers)
 def get_users():

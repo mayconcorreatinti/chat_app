@@ -22,7 +22,7 @@ class Mysqldb:
       database = self._database, 
     )
 
-  def _query(self,query:str,data=None) -> bool | list[dict]:
+  def _query(self,query:str,data=None) -> list:
     if not self.conn.is_connected():
       self.conn = self._connection()
     
@@ -33,17 +33,19 @@ class Mysqldb:
         self.conn.commit()
       return response
   
-  def select_user_from_table(self,data:tuple,column='email') -> list[dict]:
-    return self._query(f"SELECT * FROM users WHERE username = (%s) or {column} = (%s) LIMIT 1;",data)
+  def select_user_from_table(self,username) -> list[dict]:
+    users = self._query(f"SELECT * FROM users WHERE username = (%s) LIMIT 1;",(username,))
+    for user in users:
+      return user
   
   def select_users_from_table(self) -> list[dict]:
     return self._query("SELECT * FROM users LIMIT 35;")
 
-  def insert_user_from_table(self,data:tuple) -> bool:
-    return self._query("INSERT INTO users(username,email,password) VALUES (%s,%s,%s);",data)
-    
-  def delete_user_from_table(self,data:tuple) -> bool:
-    return self._query("DELETE FROM users WHERE id = (%s);",data)
+  def insert_user_from_table(self,data:tuple) -> None:
+    self._query("INSERT INTO users(username,email,password) VALUES (%s,%s,%s);",data)
+  
+  def delete_user_from_table(self,data:tuple) -> None:
+    self._query("DELETE FROM users WHERE id = (%s);",data)
 
 
 

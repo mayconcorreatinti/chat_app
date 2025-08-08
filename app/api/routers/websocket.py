@@ -1,8 +1,6 @@
-from fastapi import (
-    WebSocket,APIRouter,WebSocketDisconnect,Depends
-)
-from services.auth_services import get_current_user
-from services.websocket_services import ConnectionManager
+from fastapi import WebSocket,APIRouter,WebSocketDisconnect
+from app.services.auth_services import get_current_user
+from app.services.websocket_services import ConnectionManager
 
 
 app = APIRouter()

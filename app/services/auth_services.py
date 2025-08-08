@@ -6,7 +6,7 @@ from fastapi.security import OAuth2PasswordBearer
 import jwt
 from http import HTTPStatus
 from jwt.exceptions import InvalidTokenError
-from database import Mysqldb
+from app.database import Mysqldb
 
 
 load_dotenv()
@@ -18,7 +18,7 @@ db=Mysqldb()
 #encode token
 def get_token(data:dict) -> str:
     exp=datetime.now(UTC) + timedelta(minutes=int(os.getenv('ACCESS_TOKEN_EXPIRE_MINUTES')))
-    payload = {'sub':data['email'],'exp':exp}
+    payload = {'sub':data['username'],'exp':exp}
     token = jwt.encode(
         payload=payload,
         key=os.getenv('SECRET_KEY'),
@@ -39,14 +39,12 @@ def get_current_user(token:str):
             os.getenv('SECRET_KEY'),
             algorithms=[os.getenv('ALGORITHM')]
         )
-        email = payload.get('sub')
-        if not email:
+        username = payload.get('sub')
+        if not username:
             raise credentials_exception
     except InvalidTokenError:
         raise credentials_exception
-    
-    list_user = db.select_user_from_table(('',email))
-    for user in list_user:
-        if user == '':
-            raise credentials_exception
-        return user
+    user = db.select_user_from_table(username)
+    if not user:
+        raise credentials_exception
+    return user
