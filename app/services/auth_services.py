@@ -27,7 +27,7 @@ def get_token(data:dict) -> str:
     return token
 
 '''decode token'''
-def get_current_user(token:str):
+async def get_current_user(token:str):
     credentials_exception=WebSocketException(
         code=status.WS_1007_INVALID_FRAME_PAYLOAD_DATA
     )
@@ -42,7 +42,7 @@ def get_current_user(token:str):
             raise credentials_exception
     except InvalidTokenError:
         raise credentials_exception
-    user = db.select_user_from_table(username)
+    user = await db.select_user_from_table(username)
     if not user:
         raise credentials_exception
     return user
