@@ -34,16 +34,42 @@ class Mysqldb:
       return response
   
   async def select_user_from_table(self,username:str) -> list[dict]:
-    users = await self._query(f"SELECT * FROM users WHERE username = (%s) LIMIT 1;",(username,))
+    users = await self._query("""
+      SELECT id,
+        username,
+        email,
+        password,
+      FROM users
+      WHERE username = (%s) 
+      LIMIT 1;
+      """,
+      (username,)
+    )
     for user in users:
       return user
   
   async def select_users_from_table(self) -> list[dict]:
-    return await self._query("SELECT * FROM users LIMIT 35;")
+    return await self._query("""
+        SELECT id,
+          username,
+          email,
+          password, 
+        FROM users 
+        LIMIT 35;
+      """
+    )
 
   async def insert_user_from_table(self,data:tuple) -> None:
-    await self._query("INSERT INTO users(username,email,password) VALUES (%s,%s,%s);",data)
+    await self._query("""
+        INSERT INTO users(username,email,password)
+        VALUES (%s,%s,%s);
+      """,data
+    )
   
   async def delete_user_from_table(self,data:tuple) -> None:
-    await self._query("DELETE FROM users WHERE id = (%s);",data)
+    await self._query("""
+        DELETE FROM users 
+        WHERE id = (%s);
+      """,data
+    )
 
