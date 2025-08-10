@@ -10,8 +10,8 @@ app = APIRouter(tags=['auth'],prefix='/token')
 db = Mysqldb()
 
 @app.post('/')
-def auth_router(data:OAuth2PasswordRequestForm = Depends()):
-    user = db.select_user_from_table(data.username)
+async def auth_router(data:OAuth2PasswordRequestForm = Depends()):
+    user = await db.select_user_from_table(data.username)
     if not user:
         raise HTTPException(
             detail="Incorrect username or password!", status_code=HTTPStatus.FORBIDDEN

@@ -10,7 +10,7 @@ ws_manager = ConnectionManager()
 async def push_endpoint(token:str,websocket:WebSocket):
     await ws_manager.connect(websocket)
     try:
-        user = get_current_user(token)
+        user = await get_current_user(token)
         await ws_manager.broadcast(f"{user['username']} entrou na sala!!")
         while True:
             data = await websocket.receive_text()

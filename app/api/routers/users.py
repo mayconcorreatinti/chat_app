@@ -9,8 +9,8 @@ app = APIRouter(tags=['users'],prefix='/users')
 db = Mysqldb()
 
 @app.post('/',status_code=HTTPStatus.CREATED,response_model=PublicCredentials)
-def create_account(account:Credentials):
-    user = db.select_user_from_table(account.username)
+async def create_account(account:Credentials):
+    user = await db.select_user_from_table(account.username)
     if user:
         if account.username in user['username']:
             raise HTTPException(
@@ -22,14 +22,14 @@ def create_account(account:Credentials):
                 detail="This email already exists!",
                 status_code=HTTPStatus.CONFLICT,
             )
-    db.insert_user_from_table(
+    await db.insert_user_from_table(
         (
             account.username,
             account.email,
             password_hash(account.password),
         )
     )
-    user = db.select_user_from_table(account.username)
+    user = await db.select_user_from_table(account.username)
     return {
         'id':user['id'],
         'username':user['username'],
@@ -37,7 +37,7 @@ def create_account(account:Credentials):
     }
 
 @app.get('/',response_model=Listusers)
-def get_users():
-    list_users = db.select_users_from_table()
+async def get_users():
+    list_users = await db.select_users_from_table()
     return {'users':list_users}
     

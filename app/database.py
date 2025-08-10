@@ -1,7 +1,7 @@
 import os 
-import mysql.connector
+from mysql.connector.aio import connect
 from dotenv import load_dotenv
-
+import asyncio
 
 load_dotenv()
 
@@ -12,40 +12,38 @@ class Mysqldb:
     self._user = os.getenv('USER')
     self._password = os.getenv('PASSWORD')
     self._database = os.getenv('DATABASE')
-    self.conn = self._connection()
+    self.conn = None
 
-  def _connection(self):
-    return mysql.connector.connect(
+  async def _connection(self):
+    return await connect(
       user = self._user,
       password = self._password,
       host = self._host,
-      database = self._database, 
+      database = self._database
     )
+  
+  async def _query(self,query:str,data=None) -> list:
+    if not self.conn:
+      self.conn = await self._connection()
 
-  def _query(self,query:str,data=None) -> list:
-    if not self.conn.is_connected():
-      self.conn = self._connection()
-    
-    with self.conn.cursor(dictionary=True) as cursor:
-      cursor.execute(query,data)
-      response = cursor.fetchall()
+    async with await self.conn.cursor(dictionary=True) as cursor:
+      await cursor.execute(query,data)
+      response = await cursor.fetchall()
       if data:
-        self.conn.commit()
+        await self.conn.commit()
       return response
   
-  def select_user_from_table(self,username) -> list[dict]:
-    users = self._query(f"SELECT * FROM users WHERE username = (%s) LIMIT 1;",(username,))
+  async def select_user_from_table(self,username:str) -> list[dict]:
+    users = await self._query(f"SELECT * FROM users WHERE username = (%s) LIMIT 1;",(username,))
     for user in users:
       return user
   
-  def select_users_from_table(self) -> list[dict]:
-    return self._query("SELECT * FROM users LIMIT 35;")
+  async def select_users_from_table(self) -> list[dict]:
+    return await self._query("SELECT * FROM users LIMIT 35;")
 
-  def insert_user_from_table(self,data:tuple) -> None:
-    self._query("INSERT INTO users(username,email,password) VALUES (%s,%s,%s);",data)
+  async def insert_user_from_table(self,data:tuple) -> None:
+    await self._query("INSERT INTO users(username,email,password) VALUES (%s,%s,%s);",data)
   
-  def delete_user_from_table(self,data:tuple) -> None:
-    self._query("DELETE FROM users WHERE id = (%s);",data)
-
-
+  async def delete_user_from_table(self,data:tuple) -> None:
+    await self._query("DELETE FROM users WHERE id = (%s);",data)
 
