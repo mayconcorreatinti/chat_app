@@ -3,11 +3,17 @@ services:
     image: mysql:8.0
     env_file:
       - .env
+    # environment:
+    #   MYSQL_ROOT_PASSWORD: ${ROOT_PASSWORD}
+    #   MYSQL_USER: ${USER}
+    #   MYSQL_PASSWORD: ${PASSWORD}
+    #   MYSQL_DATABASE: ${DATABASE}
     environment:
-      MYSQL_ROOT_PASSWORD: ${ROOT_PASSWORD}
-      MYSQL_USER: ${USER}
-      MYSQL_PASSWORD: ${PASSWORD}
-      MYSQL_DATABASE: ${DATABASE}
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_USER: lab_user
+      MYSQL_PASSWORD: minha_senha
+      MYSQL_DATABASE: lab
+
     ports:
       - "3307:3306"
     volumes:

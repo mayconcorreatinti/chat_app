@@ -12,7 +12,7 @@ class Mysqldb:
     self._user = os.getenv('USER')
     self._password = os.getenv('PASSWORD')
     self._database = os.getenv('DATABASE')
-    self._port = os.getenv('PORT')
+    self._port = int(os.getenv('PORT'))
     self.conn = None
 
   async def _connection(self):
@@ -40,7 +40,7 @@ class Mysqldb:
         SELECT id,
           username,
           email,
-          password,
+          password
         FROM users
         WHERE username = (%s) 
         LIMIT 1;
@@ -55,7 +55,7 @@ class Mysqldb:
         SELECT id,
           username,
           email,
-          password, 
+          password
         FROM users 
         LIMIT 35;
       """
@@ -74,4 +74,3 @@ class Mysqldb:
         WHERE id = (%s);
       """,data
     )
-
