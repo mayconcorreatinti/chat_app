@@ -23,26 +23,18 @@
         <thead>
             <tr class="table-dark">
                 <th scope="col">IDENTIFIER</th>
-                <th scope="col">USERNAME</th>
                 <th scope="col">EMAIL</th>
+                <th scope="col">USERNAME</th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <th scope="row">1</th>
-                <td>user1</td>
-                <td>user1@gmail.com</td>
-            </tr>
-            <tr>
-                <th scope="row">2</th>
-                <td>user2</td>
-                <td>user2@gmail.com</td>
-            </tr>
-            <tr>
-                <th scope="row">3</th>
-                <td>user3</td>
-                <td>user3@gmail.com</td>
-            </tr>
+            {% for c in users %}
+                <tr>
+                    <th scope="row">{{c.id}}</th>
+                    <td>{{c.email}}</td>
+                    <td>{{c.username}}</td>
+                </tr>
+            {% endfor %}
         </tbody>
     </table>
 </body>
