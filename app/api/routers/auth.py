@@ -1,13 +1,13 @@
-from fastapi import APIRouter,Depends,HTTPException
+from fastapi import APIRouter,Depends,HTTPException,Request
+from app.services.template_services import templates
 from fastapi.security import OAuth2PasswordRequestForm
-from app.database import Mysqldb
+from app.database import db
 from http import HTTPStatus
 from app.services.user_security_services import verify_password
 from app.services.auth_services import get_token
 
 
-app = APIRouter(tags=['auth'],prefix='/token')
-db = Mysqldb()
+app = APIRouter(tags=['auth'],prefix='/auth')
 
 @app.post('/')
 async def auth_router(data:OAuth2PasswordRequestForm = Depends()):
@@ -25,5 +25,9 @@ async def auth_router(data:OAuth2PasswordRequestForm = Depends()):
         "access_token":token,
         "token_type":"bearer"
     }
+
+@app.get('/')
+def auth_router_page(request:Request):
+    return templates.TemplateResponse("login.html",{"request":request})
 
 

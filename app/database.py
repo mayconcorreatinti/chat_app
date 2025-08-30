@@ -74,3 +74,5 @@ class Mysqldb:
         WHERE id = (%s);
       """,data
     )
+
+db=Mysqldb()
