@@ -14,18 +14,18 @@
             padding-top: 110px;
         }
     </style>
-    <form>
+    <form method="post" action="">
         <h1>
             login
         </h1>
         <br>
         <div class="mb-3">
-            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Email" style="height: 45px;width: 42%;margin: auto;" ><br>
+            <input type="username" class="form-control" id="exampleInputusername" placeholder="Username" style="height: 45px;width: 42%;margin: auto;" ><br>
             <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" style="height: 45px;width: 42%;margin: auto;">
         </div>
         <div class="d-grid gap-2 col-5 mx-auto">
-            <button type="submit" class="btn btn-primary" style="height: 45px;;">Submit</button><br>
-            <a href="register.html">create an account</a>
+            <button type="submit" class="btn btn-primary" style="height: 45px;;">Submit</button>
+            <a href="{{url_for('register_router_page')}}"><h4>create an account</h4></a>
         </div>
     </form>
 </body>

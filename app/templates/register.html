@@ -14,19 +14,22 @@
             padding-top: 110px;
         }
     </style>
-    <form>
+    <form method="post" action='/register'>
         <h1>
             register
         </h1>
         <br>
         <div class="mb-3">
-            <input type="text" class="form-control" id="exampleInputUsername1" placeholder="Username" style="height: 45px;width: 42%;margin: auto;" ><br>
-            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Email" style="height: 45px;width: 42%;margin: auto;" ><br>
-            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" style="height: 45px;width: 42%;margin: auto;">
+            <input name="username" required type="text" class="form-control" id="exampleInputUsername1" placeholder="Username" style="height: 45px;width: 42%;margin: auto;" ><br>
+            <input name="email" required type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Email" style="height: 45px;width: 42%;margin: auto;" ><br>
+            <input name="password" required type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" style="height: 45px;width: 42%;margin: auto;">
         </div>
         <div class="d-grid gap-2 col-5 mx-auto">
-            <button type="submit" class="btn btn-primary" style="height: 45px;;">Submit</button><br>
+            <button type="submit" class="btn btn-primary" style="height: 45px;;" onclick="">Submit</button>
+            <a href="{{url_for('auth_router_page')}}"><h4>sign in</h4></a><br><br>
         </div>
     </form>
+    <h3 style="color: red; text-align: center;">{{exception}}</h3>
+    <h3 style="color: green; text-align: center;">{{data}}</h3>
 </body>
 </html>

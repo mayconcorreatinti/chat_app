@@ -50,6 +50,22 @@ class Mysqldb:
     for user in users:
       return user
   
+  async def select_the_user_for_validation(self,username:str,email:str) -> list[dict]:
+    users = await self._query("""
+        SELECT id,
+          username,
+          email,
+          password
+        FROM users
+        WHERE username = (%s) OR
+        email = (%s)
+        LIMIT 1;
+      """,
+      (username,email)
+    )
+    for user in users:
+      return user
+    
   async def select_users_from_table(self) -> list[dict]:
     return await self._query("""
         SELECT id,
@@ -74,5 +90,6 @@ class Mysqldb:
         WHERE id = (%s);
       """,data
     )
+
 
 db=Mysqldb()
