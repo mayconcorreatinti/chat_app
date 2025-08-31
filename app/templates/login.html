@@ -11,11 +11,25 @@
     <style>
         h1{
             text-align: center;
-            padding-top: 110px;
+            padding-top: 145px;
+        }
+
+        .form-control{
+            height: 45px;
+            width: 42%;
+            margin: auto;
+            background-color: rgb(28,28,28);
+            border-width: 2px;
+            border-color: rgb(83, 80, 80);
+            color: rgb(255, 252, 252);
+        }
+
+        .form-control::placeholder{
+            color: rgb(171, 170, 170);
         }
     </style>
     <form method="post" action="">
-        <h1>
+        <h1 style="color: white;">
             login
         </h1>
         <br>
@@ -25,7 +39,7 @@
         </div>
         <div class="d-grid gap-2 col-5 mx-auto">
             <button type="submit" class="btn btn-primary" style="height: 45px;;">Submit</button>
-            <a href="{{url_for('register_router_page')}}"><h4>create an account</h4></a>
+            <a href="{{url_for('register_router_page')}}"><h5>create an account</h5></a>
         </div>
     </form>
 </body>

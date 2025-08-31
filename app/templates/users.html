@@ -15,24 +15,25 @@
         h1{
             text-align: center;
             padding-top: 85px;
+            color: white;
         }
     </style>
     <h1>registered users</h1>
     <br><br>
-    <table style="width: 65%;" class="table">
+    <table style="width: 65%;" class="table table-dark">
         <thead>
-            <tr class="table-dark">
+            <tr class="table-active">
                 <th scope="col">IDENTIFIER</th>
-                <th scope="col">EMAIL</th>
                 <th scope="col">USERNAME</th>
+                <th scope="col">EMAIL</th>
             </tr>
         </thead>
         <tbody>
             {% for c in users %}
-                <tr>
+                <tr> 
                     <th scope="row">{{c.id}}</th>
-                    <td>{{c.email}}</td>
                     <td>{{c.username}}</td>
+                    <td>{{c.email}}</td>
                 </tr>
             {% endfor %}
         </tbody>

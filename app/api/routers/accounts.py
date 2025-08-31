@@ -1,16 +1,51 @@
-from fastapi import APIRouter,HTTPException,Request,Form
-from http import HTTPStatus
-from app.schemas.users_schemas import Credentials,PublicCredentials
-from app.database import db
-from app.services.user_security_services import password_hash
+from fastapi import APIRouter,Depends,HTTPException,Request,Form
 from app.services.template_services import templates
+from fastapi.security import OAuth2PasswordRequestForm
+from app.database import db
+from http import HTTPStatus
+from app.services.user_security_services import verify_password,password_hash
+from app.services.auth_services import get_token
+from app.schemas.users_schemas import Listusers,Credentials,PublicCredentials
 from typing import Annotated
 from fastapi.responses import HTMLResponse
 
 
-app = APIRouter(tags=['register'],prefix='/register')
+app = APIRouter(tags=['accounts'],prefix='/accounts')
 
-@app.post('/',status_code=HTTPStatus.CREATED,response_model=PublicCredentials)
+@app.get('/',response_model=Listusers)
+async def get_users(request:Request):
+    list_users = await db.select_users_from_table()
+    if "application/json" in request.headers.get("accept"):
+        return {'users':list_users}
+    return templates.TemplateResponse(
+        'users.html',{
+                "request":request,
+                "users":list_users
+            }
+        )
+
+@app.post('/auth')
+async def auth_router(data:OAuth2PasswordRequestForm = Depends()):
+    user = await db.select_user_from_table(data.username)
+    if not user:
+        raise HTTPException(
+            detail="Incorrect username or password!", status_code=HTTPStatus.FORBIDDEN
+        )
+    if not verify_password(data.password,user['password']):
+        raise HTTPException(
+            detail="Incorrect username or password!", status_code=HTTPStatus.FORBIDDEN
+        )
+    token = get_token(data={"username":user['username']})
+    return {
+        "access_token":token,
+        "token_type":"bearer"
+    }
+
+@app.get('/auth')
+def auth_router_page(request:Request):
+    return templates.TemplateResponse("login.html",{"request":request})
+
+@app.post('/register',status_code=HTTPStatus.CREATED,response_model=PublicCredentials)
 async def create_account(request:Request,account: Annotated[Credentials,Form()]):
     user = await db.select_the_user_for_validation(account.username,account.email)
     if user:
@@ -56,7 +91,10 @@ async def create_account(request:Request,account: Annotated[Credentials,Form()])
         'email':user['email']
     }
 
-@app.get('/',response_class=HTMLResponse)
+@app.get('/register',response_class=HTMLResponse)
 def register_router_page(request:Request):
     return templates.TemplateResponse("register.html",{"request":request})
+
+
+
 
