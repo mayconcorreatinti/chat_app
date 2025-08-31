@@ -1,5 +1,5 @@
 from pydantic import BaseModel,EmailStr
-from fastapi import Form
+
 
 class Credentials(BaseModel):
     username: str 

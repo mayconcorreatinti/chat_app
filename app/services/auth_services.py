@@ -1,10 +1,8 @@
 from datetime import datetime,UTC,timedelta
 import os
-from fastapi import Depends,HTTPException,WebSocketException,status
+from fastapi import WebSocketException,status
 from dotenv import load_dotenv
-from fastapi.security import OAuth2PasswordBearer
 import jwt
-from http import HTTPStatus
 from jwt.exceptions import InvalidTokenError
 from app.database import Mysqldb
 

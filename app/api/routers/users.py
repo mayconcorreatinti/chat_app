@@ -1,7 +1,6 @@
 from fastapi import APIRouter,Request
 from app.schemas.users_schemas import Listusers
 from app.database import db
-from app.services.user_security_services import password_hash
 from app.services.template_services import templates
 
 
