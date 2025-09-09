@@ -19,7 +19,7 @@
             width: 42%;
             margin: auto;
             background-color: rgb(28,28,28);
-            border-width: 2px;
+            border-width: 1px;
             border-color: rgb(83, 80, 80);
             color: rgb(255, 252, 252);
         }
@@ -28,14 +28,14 @@
             color: rgb(171, 170, 170);
         }
     </style>
-    <form method="post" action="">
+    <form method="post" action="/accounts/auth">
         <h1 style="color: white;">
             login
         </h1>
         <br>
         <div class="mb-3">
-            <input type="username" class="form-control" id="exampleInputusername" placeholder="Username" style="height: 45px;width: 42%;margin: auto;" ><br>
-            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" style="height: 45px;width: 42%;margin: auto;">
+            <input name="username" type="username" class="form-control" placeholder="Username"><br>
+            <input name="password" type="password" class="form-control" placeholder="Password">
         </div>
         <div class="d-grid gap-2 col-5 mx-auto">
             <button type="submit" class="btn btn-primary" style="height: 45px;;">Submit</button>

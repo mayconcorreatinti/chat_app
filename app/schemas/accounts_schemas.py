@@ -6,6 +6,10 @@ class Credentials(BaseModel):
     email: EmailStr 
     password: str 
 
+class AuthCredentials(BaseModel):
+    username: str 
+    password: str 
+
 class PublicCredentials(BaseModel):
     id: int
     email: EmailStr

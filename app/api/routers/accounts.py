@@ -1,11 +1,12 @@
-from fastapi import APIRouter,Depends,HTTPException,Request,Form
+from fastapi import APIRouter,HTTPException,Request,Form
 from app.services.template_services import templates
-from fastapi.security import OAuth2PasswordRequestForm
 from app.database import db
 from http import HTTPStatus
 from app.services.user_security_services import verify_password,password_hash
-from app.services.auth_services import get_token
-from app.schemas.users_schemas import Listusers,Credentials,PublicCredentials
+from app.services.auth_services import get_token,get_current_user
+from app.schemas.accounts_schemas import (
+    Listusers,Credentials,PublicCredentials,AuthCredentials
+)
 from typing import Annotated
 from fastapi.responses import HTMLResponse
 
@@ -25,13 +26,25 @@ async def get_users(request:Request):
         )
 
 @app.post('/auth')
-async def auth_router(data:OAuth2PasswordRequestForm = Depends()):
+async def auth_router(data: Annotated[AuthCredentials,Form()],request:Request):
     user = await db.select_user_from_table(data.username)
     if not user:
+        if "text/html" in request.headers.get("accept"):
+            return templates.TemplateResponse('login.html',{
+                    "request":request,
+                    "exception":"Incorrect username or password!"
+                }
+            )
         raise HTTPException(
             detail="Incorrect username or password!", status_code=HTTPStatus.FORBIDDEN
         )
     if not verify_password(data.password,user['password']):
+        if "text/html" in request.headers.get("accept"):
+            return templates.TemplateResponse('login.html',{
+                    "request":request,
+                    "exception":"Incorrect username or password!"
+                }
+            )
         raise HTTPException(
             detail="Incorrect username or password!", status_code=HTTPStatus.FORBIDDEN
         )

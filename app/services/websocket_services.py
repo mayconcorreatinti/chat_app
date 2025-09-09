@@ -16,3 +16,5 @@ class ConnectionManager:
         for con in self.connections:
             await con.send_text(message)
         
+
+
