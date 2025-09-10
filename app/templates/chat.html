@@ -15,10 +15,11 @@
         <style>
             li {
                 list-style-type: none;
+                font-size: 20px;
             }
         </style>
         <script>
-            var ws = new WebSocket(`ws://localhost:8000/ws`);
+            var ws = new WebSocket(`ws://localhost:8000/ws?token={{token}}`);
             ws.onmessage = function(event) {
                 var messages = document.getElementById('messages')
                 var message = document.createElement('li')

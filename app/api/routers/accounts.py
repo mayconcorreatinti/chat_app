@@ -3,13 +3,12 @@ from app.services.template_services import templates
 from app.database import db
 from http import HTTPStatus
 from app.services.user_security_services import verify_password,password_hash
-from app.services.auth_services import get_token,get_current_user
+from app.services.auth_services import get_token
 from app.schemas.accounts_schemas import (
     Listusers,Credentials,PublicCredentials,AuthCredentials
 )
 from typing import Annotated
-from fastapi.responses import HTMLResponse
-
+from fastapi.responses import HTMLResponse,RedirectResponse
 
 app = APIRouter(tags=['accounts'],prefix='/accounts')
 
@@ -49,6 +48,8 @@ async def auth_router(data: Annotated[AuthCredentials,Form()],request:Request):
             detail="Incorrect username or password!", status_code=HTTPStatus.FORBIDDEN
         )
     token = get_token(data={"username":user['username']})
+    if "text/html" in request.headers.get("accept"):
+        return RedirectResponse(url=f"/chat?token={token}")
     return {
         "access_token":token,
         "token_type":"bearer"

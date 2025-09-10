@@ -9,9 +9,8 @@ app = APIRouter()
 ws_manager = ConnectionManager()
 
 @app.websocket('/ws')
-async def websocket_endpoint(websocket:WebSocket,):
+async def websocket_endpoint(websocket:WebSocket,token:str):
     await ws_manager.connect(websocket)
-    token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJtYXljb24xMjEyIiwiZXhwIjoxNzU3NDUwODQyfQ.d_G7jQN5c2utu-nnHqezFz3PphRT3yz7XJeko_qp3yU"
     try:
         user = await get_current_user(token)
         await ws_manager.broadcast(f"{user['username']} entrou na sala!!")
@@ -22,6 +21,10 @@ async def websocket_endpoint(websocket:WebSocket,):
         await ws_manager.disconnect(websocket)
         await ws_manager.broadcast(f"{user['username']} saiu da sala.")
 
-@app.get('/ws',response_class=HTMLResponse)
-def ws_page(request:Request):
-    return templates.TemplateResponse('chat.html',{'request':request})
+@app.post('/chat',response_class=HTMLResponse)
+def ws_page(request:Request,token:str):
+    return templates.TemplateResponse('chat.html',{
+            'request':request,
+            'token':token
+        }
+    )
