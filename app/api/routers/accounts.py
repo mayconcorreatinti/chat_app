@@ -8,9 +8,10 @@ from app.schemas.accounts_schemas import (
     Listusers,Credentials,PublicCredentials,AuthCredentials
 )
 from typing import Annotated
-from fastapi.responses import HTMLResponse,RedirectResponse
+from fastapi.responses import RedirectResponse
 
-app = APIRouter(tags=['accounts'],prefix='/accounts')
+
+app = APIRouter(prefix='/accounts')
 
 @app.get('/',response_model=Listusers)
 async def get_users(request:Request):
@@ -37,7 +38,7 @@ async def auth_router(data: Annotated[AuthCredentials,Form()],request:Request):
         raise HTTPException(
             detail="Incorrect username or password!", status_code=HTTPStatus.FORBIDDEN
         )
-    if not verify_password(data.password,user['password']):
+    elif not verify_password(data.password,user['password']):
         if "text/html" in request.headers.get("accept"):
             return templates.TemplateResponse('login.html',{
                     "request":request,
@@ -54,10 +55,6 @@ async def auth_router(data: Annotated[AuthCredentials,Form()],request:Request):
         "access_token":token,
         "token_type":"bearer"
     }
-
-@app.get('/auth')
-def auth_router_page(request:Request):
-    return templates.TemplateResponse("login.html",{"request":request})
 
 @app.post('/register',status_code=HTTPStatus.CREATED,response_model=PublicCredentials)
 async def create_account(request:Request,account: Annotated[Credentials,Form()]):
@@ -95,20 +92,14 @@ async def create_account(request:Request,account: Annotated[Credentials,Form()])
     user = await db.select_user_from_table(account.username)
     if "text/html" in request.headers.get("accept"):
         return templates.TemplateResponse("register.html",{
-                            "request":request,
-                            "data": "user registered successfully"
-                        }
-                    )
+                "request":request,
+                "data": "user registered successfully"
+            }
+        )
     return {
         'id':user['id'],
         'username':user['username'],
         'email':user['email']
     }
-
-@app.get('/register',response_class=HTMLResponse)
-def register_router_page(request:Request):
-    return templates.TemplateResponse("register.html",{"request":request})
-
-
 
 

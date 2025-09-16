@@ -9,7 +9,7 @@ class ConnectionManager:
         await websocket.accept()
         self.connections.append(websocket)
 
-    async def disconnect(self,websocket):
+    def disconnect(self,websocket):
         self.connections.remove(websocket)
 
     async def broadcast(self,message):
