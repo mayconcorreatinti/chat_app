@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
-    <title>register</title>
+    {% include 'head_boilerplaite.html' %}
+    {% block title %}
+        <title>register</title>
+    {% endblock title %}
     <style>
         h1 {
             text-align: center;
@@ -24,26 +23,25 @@
         .form-control::placeholder {
             color: rgb(171, 170, 170);
         }
-    
     </style>
 </head>
 <body style="background-color: black">
-    <form method="post" action='/accounts/register'>
-        <h1 style="color: white;">
-            register
-        </h1>
-        <br>
-        <div class="mb-3">
-            <input name="username" required type="text" class="form-control" id="exampleInputUsername1" placeholder="Username"><br>
-            <input name="email" required type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Email"><br>
-            <input name="password" required type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-        </div>
-        <div class="d-grid gap-2 col-5 mx-auto">
-            <button type="submit" class="btn btn-primary" style="height: 45px;">Submit</button>
-            <a href="{{url_for('auth_router_page')}}"><h5>sign in</h5></a><br><br>
-        </div>
-    </form>
-    <h3 style="color: red; text-align: center;">{{exception}}</h3>
-    <h3 style="color: green; text-align: center;">{{data}}</h3>
+    {% block form %}
+        <form method="post" action='/accounts/register'>
+            <h1 style="color: white;">register</h1>
+            <br>
+            <div class="mb-3">
+                <input name="username" required type="text" class="form-control" id="exampleInputUsername1" placeholder="Username"><br>
+                <input name="email" required type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Email"><br>
+                <input name="password" required type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+            </div> 
+            <div class="d-grid gap-2 col-5 mx-auto">
+                <button type="submit" class="btn btn-primary" style="height: 45px;">Submit</button>
+                <a href="{{url_for('auth_router_page')}}"><h5>sign in</h5></a><br><br>
+            </div>
+        </form>
+        <h3 style="color: red; text-align: center;">{{exception}}</h3>
+        <h3 style="color: green; text-align: center;">{{success}}</h3>
+    {% endblock form %}
 </body>
 </html>

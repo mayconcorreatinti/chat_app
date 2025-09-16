@@ -87,7 +87,7 @@ async def create_account(request:Request,account: Annotated[Credentials,Form()])
     if html_request:
         return templates.TemplateResponse("register.html",{
                 "request":request,
-                "data": "user registered successfully"
+                "success": "user registered successfully"
             }
         )
     return {

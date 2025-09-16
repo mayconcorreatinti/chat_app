@@ -12,3 +12,4 @@ def register_router_page(request:Request):
 @app.get('/auth')
 def auth_router_page(request:Request):
     return templates.TemplateResponse("login.html",{"request":request})
+
