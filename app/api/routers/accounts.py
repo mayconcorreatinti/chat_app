@@ -28,28 +28,20 @@ async def get_users(request:Request):
 @app.post('/auth')
 async def auth_router(data: Annotated[AuthCredentials,Form()],request:Request):
     user = await db.select_user_from_table(data.username)
-    if not user:
-        if "text/html" in request.headers.get("accept"):
+    if "text/html" in request.headers.get("accept"):
+        html_request = True
+    if not user or not verify_password(data.password,user['password']):
+        if html_request:
             return templates.TemplateResponse('login.html',{
                     "request":request,
-                    "exception":"Incorrect username or password!"
-                }
-            )
-        raise HTTPException(
-            detail="Incorrect username or password!", status_code=HTTPStatus.FORBIDDEN
-        )
-    elif not verify_password(data.password,user['password']):
-        if "text/html" in request.headers.get("accept"):
-            return templates.TemplateResponse('login.html',{
-                    "request":request,
-                    "exception":"Incorrect username or password!"
+                    "error":True
                 }
             )
         raise HTTPException(
             detail="Incorrect username or password!", status_code=HTTPStatus.FORBIDDEN
         )
     token = get_token(data={"username":user['username']})
-    if "text/html" in request.headers.get("accept"):
+    if html_request:
         return RedirectResponse(url=f"/chat?token={token}")
     return {
         "access_token":token,
@@ -59,9 +51,11 @@ async def auth_router(data: Annotated[AuthCredentials,Form()],request:Request):
 @app.post('/register',status_code=HTTPStatus.CREATED,response_model=PublicCredentials)
 async def create_account(request:Request,account: Annotated[Credentials,Form()]):
     user = await db.select_the_user_for_validation(account.username,account.email)
+    if "text/html" in request.headers.get("accept"):
+        html_request = True
     if user:
         if account.username == user['username']:
-            if "text/html" in request.headers.get("accept"):
+            if html_request:
                 return templates.TemplateResponse("register.html",{
                             "request":request,
                             "exception":"This username already exists!"
@@ -72,7 +66,7 @@ async def create_account(request:Request,account: Annotated[Credentials,Form()])
                 status_code=HTTPStatus.CONFLICT,
             )
         elif account.email == user['email']:
-            if "text/html" in request.headers.get("accept"):
+            if html_request:
                 return templates.TemplateResponse("register.html",{
                             "request":request,
                             "exception":"This email already exists!"
@@ -90,7 +84,7 @@ async def create_account(request:Request,account: Annotated[Credentials,Form()])
         )
     )
     user = await db.select_user_from_table(account.username)
-    if "text/html" in request.headers.get("accept"):
+    if html_request:
         return templates.TemplateResponse("register.html",{
                 "request":request,
                 "data": "user registered successfully"

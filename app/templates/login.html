@@ -42,6 +42,8 @@
             <a href="{{url_for('register_router_page')}}"><h5>create an account</h5></a>
         </div>
     </form><br>
-    <h3 style="color: red; text-align: center;">{{exception}}</h3>
+    {% if error %}
+        <h3 style="color: red; text-align: center;">Incorrect username or password!</h3>
+    {% endif %}
 </body>
 </html>
