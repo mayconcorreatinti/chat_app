@@ -13,3 +13,10 @@ class PublicCredentials(BaseModel):
 
 class Listusers(BaseModel):
     users: list[PublicCredentials]
+
+class message(BaseModel):
+    message: str
+
+class token(BaseModel):
+    access_token: str
+    token_type: str
