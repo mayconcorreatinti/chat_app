@@ -1,4 +1,4 @@
-from fastapi import WebSocket,APIRouter,WebSocketDisconnect,WebSocketException
+from fastapi import WebSocket,APIRouter,WebSocketDisconnect
 from app.services.auth_services import get_current_user
 from app.services.websocket_services import ConnectionManager
 

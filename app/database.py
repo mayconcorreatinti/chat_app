@@ -1,7 +1,7 @@
 import os 
 from mysql.connector.aio import connect
 from dotenv import load_dotenv
-import asyncio
+
 
 load_dotenv()
 
@@ -43,8 +43,7 @@ class Mysqldb:
       WHERE username = (%s) or
       email = (%s)
       LIMIT 1;
-      """,
-      (username,email)
+      """,(username,email)
     )
     for user in users:
       return user
@@ -70,6 +69,16 @@ class Mysqldb:
   async def delete_user_from_table(self,data:tuple) -> None:
     await self._query("""
         DELETE FROM users 
+        WHERE id = (%s);
+      """,data
+    )
+
+  async def update_user_from_table(self,data:tuple) -> None:
+    await self._query("""
+        UPDATE users SET 
+        username = (%s),
+        email = (%s),
+        password = (%s) 
         WHERE id = (%s);
       """,data
     )
