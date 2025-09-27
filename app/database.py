@@ -33,17 +33,18 @@ class Mysqldb:
         await self.conn.commit()
       return response
   
-  async def select_user_from_table(self,username:str) -> list[dict]:
+  async def select_user_from_table(self,username:str,email:str = '') -> list[dict]:
     users = await self._query("""
       SELECT id,
         username,
         email,
-        password,
+        password
       FROM users
-      WHERE username = (%s) 
+      WHERE username = (%s) or
+      email = (%s)
       LIMIT 1;
       """,
-      (username,)
+      (username,email)
     )
     for user in users:
       return user
@@ -53,7 +54,7 @@ class Mysqldb:
         SELECT id,
           username,
           email,
-          password, 
+          password
         FROM users 
         LIMIT 35;
       """
@@ -73,3 +74,4 @@ class Mysqldb:
       """,data
     )
 
+db=Mysqldb()

@@ -1,5 +1,4 @@
 from pwdlib import PasswordHash
-from fastapi.security import OAuth2PasswordBearer
 
 
 pwd_context = PasswordHash.recommended()
