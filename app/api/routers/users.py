@@ -9,7 +9,7 @@ from app.services.auth_services import get_current_user
 from mysql.connector import IntegrityError
 
 
-app = APIRouter(tags=['accounts'],prefix='/accounts')
+app = APIRouter(tags=['users'],prefix='/api/users')
 
 @app.get('/',response_model=Listusers)
 async def get_users():
@@ -22,12 +22,12 @@ async def create_account(account:Credentials):
     if user:
         if account.username == user['username']:
             raise HTTPException(
-                detail="This name already exists!",
+                detail='This name already exists!',
                 status_code=HTTPStatus.CONFLICT,
             )
         elif account.email == user['email']:
             raise HTTPException(
-                detail="This email already exists!",
+                detail='This email already exists!',
                 status_code=HTTPStatus.CONFLICT,
             )
     await db.insert_user_from_table(
@@ -49,31 +49,31 @@ async def auth_router(data:OAuth2PasswordRequestForm = Depends()):
     user = await db.select_user_from_table(data.username)
     if not user or not verify_password(data.password,user['password']):
         raise HTTPException(
-            detail="Incorrect username or password!",
+            detail='Incorrect username or password!',
             status_code=HTTPStatus.UNAUTHORIZED
         )
-    token = get_token(data={"username":user['username']})
+    token = get_token(data={'username':user['username']})
     return {
-        "access_token":token,
-        "token_type":"Bearer"
+        'access_token':token,
+        'token_type':'Bearer'
     }
 
 @app.delete('/{id}',response_model=message)
 async def delete_account(id:int,current_user = Depends(get_current_user)):
-    if id != current_user["id"]:
+    if id != current_user['id']:
         raise HTTPException(
             status_code=HTTPStatus.UNAUTHORIZED,
-            detail="unauthorized request"
+            detail='unauthorized request'
         )
     await db.delete_user_from_table((id,))
-    return {"message":"user successfully removed"}
+    return {'message':'user successfully removed'}
 
 @app.put('/{id}',response_model=message)
 async def update_account(id:int,account:Credentials,current_user = Depends(get_current_user)):
-    if id != current_user["id"]:
+    if id != current_user['id']:
         raise HTTPException(
             status_code=HTTPStatus.UNAUTHORIZED,
-            detail="unauthorized request"
+            detail='unauthorized request'
         )
     try:
         await db.update_user_from_table(
@@ -87,8 +87,6 @@ async def update_account(id:int,account:Credentials,current_user = Depends(get_c
     except IntegrityError:
         raise HTTPException(
             status_code=HTTPStatus.CONFLICT,
-            detail="Username or email already exists!"
+            detail='Username or email already exists!'
         )
-    return {"message":"credentials updated successfully"}
-
-    
+    return {'message':'credentials updated successfully'}

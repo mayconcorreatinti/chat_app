@@ -11,10 +11,10 @@ async def push_endpoint(token:str,websocket:WebSocket):
     await ws_manager.connect(websocket)
     try:
         user = await get_current_user(token)
-        await ws_manager.broadcast(f"{user['username']} entrou na sala!!")
+        await ws_manager.broadcast(f'{user['username']} entrou na sala!!')
         while True:
             data = await websocket.receive_text()
-            await ws_manager.broadcast(f"{user['username']}: {data}")
+            await ws_manager.broadcast(f'{user['username']}: {data}')
     except WebSocketDisconnect:
         await ws_manager.disconnect(websocket)
-        await ws_manager.broadcast(f"{user['username']} saiu da sala.")
+        await ws_manager.broadcast(f'{user['username']} saiu da sala.')
